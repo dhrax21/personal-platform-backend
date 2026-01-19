@@ -34,7 +34,6 @@ These are the exact patterns used in **modern SaaS and enterprise systems**.
 
 ## 🏗️ Architecture Overview
 
-```text
 com.dhrax.platform
 ├── config        → Security & application configuration
 ├── controller
@@ -44,3 +43,52 @@ com.dhrax.platform
 ├── repository    → Data access layer
 ├── security      → JWT utilities & filters
 └── dto           → Request/response DTOs
+
+
+## 🧠 Engineering Trade-offs
+
+Some deliberate choices made in this project:
+
+- JWT over session-based auth → better scalability
+- Cookie-based auth over Authorization header → better browser security
+- Manual security configuration over defaults → clarity and control
+- MySQL over NoSQL → relational consistency for structured data
+
+These trade-offs were chosen intentionally, not by accident.
+
+
+## 🧑‍💼 Recruiter Summary
+
+This project demonstrates:
+
+- Strong understanding of backend security
+- Practical Spring Boot & Spring Security experience
+- Ability to design real-world authentication systems
+- Clean, maintainable code organization
+- Production-oriented mindset
+
+It is designed to reflect how backend engineers work in professional teams.
+
+## 📅 Roadmap
+
+- [x] Secure authentication system
+- [ ] Blog management APIs
+- [ ] Portfolio / project showcase APIs
+- [ ] Public SEO-friendly endpoints
+- [ ] Swagger / OpenAPI documentation
+- [ ] Frontend integration
+- [ ] CI/CD pipeline
+
+The project is actively evolving.
+
+
+here I focussed on:
+- Why I chose stateless JWT authentication
+- How Spring Security filters work internally
+- How cookies improve frontend security
+- How the architecture supports future growth
+- Real-world issues encountered and solved
+
+This project reflects practical learning, not tutorial copying.
+
+
