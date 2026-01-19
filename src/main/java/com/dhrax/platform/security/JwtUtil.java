@@ -19,10 +19,16 @@ public class JwtUtil {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") long expiration
     ) {
-        // Convert RAW secret string → cryptographic key
+        if (secret == null || secret.length() < 32) {
+            throw new IllegalStateException(
+                    "JWT_SECRET is missing or too short (must be at least 32 characters)"
+            );
+        }
+
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expiration = expiration;
     }
+
 
     public String generateToken(String username) {
         return Jwts.builder()
