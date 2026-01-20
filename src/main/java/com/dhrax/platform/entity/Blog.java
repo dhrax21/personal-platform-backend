@@ -34,7 +34,7 @@ public class Blog {
     private String summary;
 
     @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
     @Enumerated(EnumType.STRING)

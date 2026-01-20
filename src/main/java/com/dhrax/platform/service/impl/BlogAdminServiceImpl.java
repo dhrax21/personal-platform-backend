@@ -39,7 +39,11 @@ public class BlogAdminServiceImpl implements BlogAdminService {
     public BlogAdminResponse update(Long id, BlogRequest request) {
         Blog blog = getBlog(id);
 
+        String baseSlug = SlugUtil.toSlug(request.getTitle());
+        String slug = generateUniqueSlug(baseSlug);
+
         blog.setTitle(request.getTitle());
+        blog.setSlug(slug);
         blog.setSummary(request.getSummary());
         blog.setContent(request.getContent());
 
