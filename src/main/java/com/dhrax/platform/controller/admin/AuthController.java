@@ -7,9 +7,14 @@ import com.dhrax.platform.security.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
+
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/admin/auth")
@@ -19,6 +24,13 @@ public class AuthController {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    private final Environment environment;
+
+    private boolean isProd() {
+        return environment.acceptsProfiles("prod");
+    }
+
 
     @PostMapping("/login")
     public void login(
@@ -33,16 +45,21 @@ public class AuthController {
         }
 
         String token = jwtUtil.generateToken(user.getUsername());
+        boolean prod = isProd();
 
         ResponseCookie cookie = ResponseCookie.from("auth_token", token)
                 .httpOnly(true)
                 .secure(false)
-                .sameSite("None")
+                .sameSite(prod ? "None" : "Lax")
                 .path("/")
                 .maxAge(24 * 60 * 60)   // 1 day
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        System.out.println(
+                "Active profiles: " + Arrays.toString(environment.getActiveProfiles())
+        );
+
     }
 
     @PostMapping("/logout")

@@ -1,7 +1,5 @@
 package com.dhrax.platform.security;
 
-
-import com.dhrax.platform.entity.User;
 import com.dhrax.platform.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,8 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -35,44 +32,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
-
         String token = extractTokenFromCookie(request);
 
-        if (token != null && jwtUtil.validateToken(token)) {
+        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            if (!jwtUtil.validateToken(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String username = jwtUtil.extractUsername(token);
 
-            User user = userRepository.findByUsername(username).orElse(null);
-
-            if (user != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                user.getUsername(),
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
-                        );
-
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request)
-                );
-
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+            var user = userRepository.findByUsername(username).orElse(null);
+            if (user == null) {
+                filterChain.doFilter(request, response);
+                return;
             }
-        }
 
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            user.getUsername(),
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        System.out.println("AUTH = " + SecurityContextHolder.getContext().getAuthentication());
         filterChain.doFilter(request, response);
     }
 
+
     private String extractTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) return null;
-
         for (Cookie cookie : request.getCookies()) {
             if ("auth_token".equals(cookie.getName())) {
                 return cookie.getValue();
