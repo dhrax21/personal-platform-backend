@@ -49,7 +49,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("auth_token", token)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .sameSite(prod ? "None" : "Lax")
                 .path("/")
                 .maxAge(24 * 60 * 60)   // 1 day
