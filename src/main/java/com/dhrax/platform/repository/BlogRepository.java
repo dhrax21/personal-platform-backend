@@ -13,7 +13,12 @@ import org.springframework.data.domain.Pageable;
  public interface BlogRepository extends JpaRepository<Blog, Long> {
         Optional<Blog> findBySlugAndStatus(String slug, BlogStatus status);
         List<Blog> findAllByStatusOrderByPublishedAtDesc(BlogStatus status);
-        Page<Blog> findAllByStatus(BlogStatus status, Pageable pageable);
-        boolean existsBySlug(String slug);
+        Page<Blog> findAllByStatusAndPublishedAtIsNotNull(
+             BlogStatus status,
+             Pageable pageable
+        );
+
+
+     boolean existsBySlug(String slug);
 }
 

@@ -29,8 +29,9 @@ public class BlogPublicServiceImpl implements BlogPublicService {
         );
 
         return blogRepository
-                .findAllByStatus(BlogStatus.PUBLISHED, pageable)
+                .findAllByStatusAndPublishedAtIsNotNull(BlogStatus.PUBLISHED, pageable)
                 .map(this::toResponse);
+
     }
 
 
