@@ -6,7 +6,13 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = {
+                @Index(name = "idx_users_username", columnList = "username"),
+                @Index(name = "idx_users_email", columnList = "email")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,9 +33,16 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Column(nullable = false)
-    private String role; // ADMIN
+    @Column(nullable = false, length = 20)
+    private String role; // ADMIN, USER
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    /* ---------- Lifecycle Hook ---------- */
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
