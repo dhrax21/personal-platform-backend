@@ -17,7 +17,12 @@ public class BlogPublicController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return blogPublicService.listPublished(page, size);
+        try {
+            return blogPublicService.listPublished(page, size);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
     @GetMapping("/{slug}")
     public BlogPublicResponse getBySlug(@PathVariable String slug) {

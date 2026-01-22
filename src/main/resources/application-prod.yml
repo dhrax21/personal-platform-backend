@@ -16,6 +16,11 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
+logging:
+  level:
+    root: error
+    com.dhrax.platform: debug
+    org.springframework.web: error
 
 
 jwt:
