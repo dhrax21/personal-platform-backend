@@ -18,6 +18,11 @@ This project demonstrates **real-world backend engineering practices**, not tuto
 
 ---
 
+Personal Platform – Full-Stack Web Application
+🔗 Frontend: https://personal-platform-frontend.pages.dev
+
+🔗 Backend: https://personal-platform-backend.onrender.com
+
 ## 🧠 Why This Project Matters
 
 Most portfolio projects stop at CRUD.
