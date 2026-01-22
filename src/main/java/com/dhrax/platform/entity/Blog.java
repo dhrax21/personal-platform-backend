@@ -27,8 +27,7 @@ public class Blog {
     @Column(nullable = false, length = 500)
     private String summary;
 
-    @Lob
-    @Column(columnDefinition = "TEXT", nullable = false) // ✅ PostgreSQL
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(EnumType.STRING)
