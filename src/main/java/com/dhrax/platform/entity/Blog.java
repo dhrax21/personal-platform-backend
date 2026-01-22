@@ -6,13 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "blogs",
-        indexes = {
-                @Index(name = "idx_blog_slug", columnList = "slug"),
-                @Index(name = "idx_blog_status", columnList = "status")
-        }
-)
+@Table(name = "blogs")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,7 +28,7 @@ public class Blog {
     private String summary;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false) // ✅ PostgreSQL
     private String content;
 
     @Enumerated(EnumType.STRING)
